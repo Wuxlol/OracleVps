@@ -45,6 +45,6 @@ unzip  trojan-go-linux-amd64.zip
   安装证书： acme.sh -installcert -t xxx.com -ecc -key-file /root/trojan/server.key -fullchain-file /root/trojan/server.crt
   
   切换证书颁发机构：
-  let's encrypt : acme.sh -set-default-ca -server letsencrypt
-  Buypass:       acme.sh -set-default-ca -server buypass
-  ZeroSSL;       acme.sh -set-default-ca -server zerossl
+  let's encrypt : acme.sh --set-default-ca --server letsencrypt
+  Buypass:       acme.sh --set-default-ca --server buypass
+  ZeroSSL;       acme.sh --set-default-ca --server zerossl
