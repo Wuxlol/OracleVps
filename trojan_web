@@ -1,24 +1,2 @@
-安装trojan go 一键脚本安装更新
-
-source <(curl -sL https://git.io/trojan-install)
-
-卸载source <(curl -sL https://git.io/trojan-install) --remove
-
-选择 let's encrypt 证书：1
-填入域名：xxx.xxx.xxx
-安装docker版mysql：1
-后面连续回车，使用默认的用户名和密码和默认管理程序
-我们可以使用刚才解析好的域名访问trojan go的后台管理系统设置密码，
-然后用 admin/新密码 进入后台
-
-
-
-12. 更改trojan go配置文件：
-/usr/local/etc/trojan/config.json中最后增加这两个
-"websocket":{"enabled":true,"path":"/andywork","host":"test.andywork.cf"},  "mux":{"enabled":true,"concurrency":8,"idle_timeout":60}
-
-红色部分都改成自己的
-回到管理面板>trojan管理，点击重启；
-再到用户管理，就可以看到刚创建的节点
-
-.导入到v2ray客户端点击【分享】，复制粘贴链接到v2ray；双击生成的节点；修改路径（path）为上方的path，修改SNI为你的域名
+手动安装trojan-go教程，基础原理。
+https://www.youtube.com/watch?v=gw2Vl1h89Wo
