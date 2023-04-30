@@ -38,7 +38,7 @@ unzip  trojan-go-linux-amd64.zip
   证书审请：
   acme工具：   curl https://get.acme.sh | sh
   安装socat:   apt install socat
-  增加软链接： ln -s /root.acme.sh/acme.sh /usr/local/bin/acme.sh              //加个快捷方式，方便执行命令
+  增加软链接： ln -s /root/acme.sh/acme.sh /usr/local/bin/acme.sh              //加个快捷方式，方便执行命令
   注册账号：     acme.sh -register-account -m my@example.com
   开放80端口：   ufw allow 80
   申请证书： acme.sh --issue -d xxx.com --standalone -k ec-256
