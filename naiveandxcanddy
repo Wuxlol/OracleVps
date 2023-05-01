@@ -1,0 +1,138 @@
+NaiveProxy 搭建教程
+视频教程  https://www.youtube.com/watch?v=F2VsjS6fybs
+图文教程  https://lhy.life/20211218-naiveproxy/
+有不同，实验代码看图文
+
+安装 GO
+## 下载 GO 最新版
+wget "https://go.dev/dl/$(curl https://go.dev/VERSION?m=text).linux-amd64.tar.gz"
+
+## 解压至/usr/local/
+tar -xf go*.linux-amd64.tar.gz -C /usr/local/
+
+## 添加 Go 环境变量:
+echo 'export GOROOT=/usr/local/go' >> /etc/profile
+echo 'export PATH=$GOROOT/bin:$PATH' >> /etc/profile
+
+## 使变量立即生效
+source /etc/profile
+
+-----------
+安装 NaiveProxy 服务端（Caddy）
+
+## 编译 Caddy
+go install github.com/caddyserver/xcaddy/cmd/xcaddy@latest
+
+~/go/bin/xcaddy build --with github.com/caddyserver/forwardproxy@caddy2=github.com/klzgrad/forwardproxy@naive
+-----
+运行 Caddy
+创建一个caddy.json配置文件，配置文件示例如下，注意修改示例值，SSL 证书需要自行准备，点击查看如何申请 SSL 证书。
+
+
+
+{
+  "admin": {
+    "disabled": true
+  },
+  "logging": {
+    "sink": {
+      "writer": {
+        "output": "discard"
+      }
+    },
+    "logs": {
+      "default": {
+        "writer": {
+          "output": "discard"
+        }
+      }
+    }
+  },
+  "apps": {
+    "http": {
+      "servers": {
+        "srv0": {
+          "listen": [
+            ":443"
+          ],
+          "routes": [
+            {
+              "handle": [
+                {
+                  "handler": "subroute",
+                  "routes": [
+                    {
+                      "handle": [
+                        {
+                          "auth_pass_deprecated": "你的密码",
+                          "auth_user_deprecated": "你的用户名",
+                          "handler": "forward_proxy",
+                          "hide_ip": true,
+                          "hide_via": true,
+                          "probe_resistance": {}
+                        }
+                      ]
+                    },
+                    {
+                      "match": [
+                        {
+                          "host": [
+                            "你的域名"
+                          ]
+                        }
+                      ],
+                      "handle": [
+                        {
+                          "handler": "file_server",
+                          "root": "/path/你的伪装网站目录",
+                          "index_names": [
+                            "index.html"
+                          ]
+                        }
+                      ],
+                      "terminal": true
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "tls_connection_policies": [
+            {
+              "match": {
+                "sni": [
+                  "你的域名"
+                ]
+              }
+            }
+          ],
+          "automatic_https": {
+            "disable": true
+          }
+        }
+      }
+    },
+    "tls": {
+      "certificates": {
+        "load_files": [
+          {
+            "certificate": "/path/你的SSL证书路径/cert.pem",
+            "key": "/path/你的SSL证书路径/key.pem"
+          }
+        ]
+      }
+    }
+  }
+}
+
+--------------------------------
+
+NaiveProxy 客户端配置
+访问 releases 网站下载 NaiveProxy 对应的客户端，修改config.json配置文件，示例如下
+
+---
+
+{
+  "listen": "socks://0.0.0.0:1080",
+  "proxy": "https://你的用户名:你的密码@你的域名",
+}
